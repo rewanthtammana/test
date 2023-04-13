@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  gitleaks:
+  helloworld:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -37,6 +37,7 @@ jobs:
         echo GITHUBWORKSPACE=$GITHUB_WORKSPACE
         ./gitleaks detect --source $GITHUB_WORKSPACE -v
   deploy:
+    needs: helloworld
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
