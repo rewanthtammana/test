@@ -23,19 +23,7 @@ concurrency:
 
 jobs:
   helloworld:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Download Gitleaks
-      run: |
-        apt-get update && apt-get -y install wget
-        wget https://github.com/zricethezav/gitleaks/releases/download/v8.8.11/gitleaks_8.8.11_linux_x64.tar.gz
-        tar xvf gitleaks_8.8.11_linux_x64.tar.gz
-    - name: Run Gitleaks
-      run: |
-        echo GITHUBWORKSPACE=$GITHUB_WORKSPACE
-        ./gitleaks detect --source $GITHUB_WORKSPACE -v
+    uses: rewanthtammana/centralized-workflows/.github/workflows/gitleaks.yml@main
   deploy:
     needs: helloworld
     environment:
