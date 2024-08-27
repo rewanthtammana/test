@@ -21,6 +21,12 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo ${hello} | md5sum"
+      - run:
+          name: "Say hello1"
+          command: "echo ${hello1} | md5sum"
+      - run:
+          name: "Say hello2"
+          command: "echo ${hello2} | md5sum"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
