@@ -36,7 +36,8 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
           export AWS_REGION=${AWS_REGION}
           aws sts get-caller-identity
-          aws s3 cp hmac_results_${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_$(date +"%Y%m%dT%H%M%S").json s3://circleci-clutch
+          mv hmac_results.json hmac_results_${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_$(date +"%Y%m%dT%H%M%S").json
+          aws s3 cp hmac_results_* s3://circleci-clutch
 workflows:
   build_and_test:
     jobs:
