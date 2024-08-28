@@ -25,6 +25,7 @@ jobs:
         name: Install Python Dependencies
         command: |-
           pip install requests
+          env
     - run:
         name: Process export variables
         command: |-
