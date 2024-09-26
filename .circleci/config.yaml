@@ -1,0 +1,22 @@
+jobs:
+  clutch-outpost-job:
+    docker:
+    - image: cimg/aws:2024.03
+    steps:
+    - checkout:
+    - run:
+        name: Install Python Dependencies
+        command: |-
+          pip install requests
+    - run:
+        name: Process export variables
+        command: |-
+          python circleci.py
+    - run:
+        name: Ship HMAC values to AWS
+        command: |-
+          export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+          export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
+          export AWS_REGION=${AWS_REGION}
+          aws sts get-caller-identity
+          aws s3 cp hmac_results_${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_$(date +"%Y%m%dT%H%M%S").json s3://circleci-clutch
